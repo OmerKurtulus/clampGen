@@ -38,6 +38,11 @@
         </div>
     </div>
 
+    <!-- Automatic Clamp Button -->
+    <div class="automatic-clamp-container">
+        <button id="automaticClampBtn" class="automatic-clamp-btn">Automatic Clamp</button>
+    </div>
+
     <main class="container">
          <!-- Info Button -->
         <div class="info-button">
@@ -77,6 +82,40 @@
                 And finally enter the target value you want to clamp, when you press the Generate button you will get a responsive value in the max and min value range.</p>
             <p class="pop-up-warning-p">!This project works in "px"!</p>
             <button id="closePopupBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- Automatic Clamp Pop-up -->
+    <div id="automaticClampPopup" class="automatic-clamp-popup">
+        <div class="automatic-clamp-content">
+            <h2>Automatic <span>Clamp</span></h2>
+            
+            <div class="viewport-inputs">
+                <div class="viewport-input-group">
+                    <label for="autoClampMax">Maximum Viewport Width (px):</label>
+                    <input type="number" id="autoClampMax" placeholder="e.g., 1100" value="1100">
+                </div>
+                <div class="viewport-input-group">
+                    <label for="autoClampMin">Minimum Viewport Width (px):</label>
+                    <input type="number" id="autoClampMin" placeholder="e.g., 768" value="768">
+                </div>
+            </div>
+
+            <div class="css-input-container">
+                <label for="cssInput">Enter your CSS code:</label>
+                <textarea id="cssInput" placeholder="Paste your CSS code here..."></textarea>
+            </div>
+
+            <div class="css-output-container">
+                <label for="cssOutput">Processed CSS with clamp values:</label>
+                <textarea id="cssOutput" readonly></textarea>
+            </div>
+
+            <div class="automatic-clamp-buttons">
+                <button id="processCssBtn" class="process-css-btn">Process CSS</button>
+                <button id="copyOutputBtn" class="copy-output-btn">Copy Output</button>
+                <button id="closeAutomaticClampBtn" class="close-automatic-clamp-btn">Close</button>
+            </div>
         </div>
     </div>
 

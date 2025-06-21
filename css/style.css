@@ -9,6 +9,67 @@ body {
   height: 100vh;
   background-color: #131314;
   margin: 0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated Grid Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(76, 115, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: -2;
+  animation: gridMove 20s linear infinite;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(76, 115, 255, 0.3) 25%,
+    rgba(56, 155, 255, 0.4) 50%,
+    rgba(76, 115, 255, 0.3) 75%,
+    transparent 100%
+  );
+  background-size: 200px 100%;
+  z-index: -1;
+  animation: lightSweep 8s ease-in-out infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+@keyframes lightSweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
 }
 
 .container {
@@ -20,6 +81,7 @@ body {
   text-align: center;
   color: #ececec;
   position: relative;
+  z-index: 1;
 }
 
 h1 {
@@ -101,6 +163,8 @@ button#convertBtn:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 1;
+  position: relative;
 }
 
 .output {
@@ -287,12 +351,216 @@ button#convertBtn:hover {
 
 
 
+/* Automatic Clamp Button */
+.automatic-clamp-container {
+  position: fixed;
+  top: 60px;
+  width: 100%;
+  text-align: center;
+  z-index: 1000;
+}
+
+.automatic-clamp-btn {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  padding: 10px 20px;
+  color: #ffff;
+  background: linear-gradient(90deg, #4c73ff, #389bff);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(76, 115, 255, 0.3);
+}
+
+.automatic-clamp-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 115, 255, 0.4);
+}
+
+/* Automatic Clamp Popup */
+.automatic-clamp-popup {
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  background-color: #1e1f20;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+  display: none;
+  z-index: 1001;
+  overflow: hidden;
+}
+
+.automatic-clamp-content {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.automatic-clamp-content h2 {
+  margin-top: 0;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.automatic-clamp-content h2 span {
+  background: linear-gradient(90deg, #4c73ff, #389bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.viewport-inputs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.viewport-input-group {
+  flex: 1;
+}
+
+.viewport-input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
+
+.viewport-input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.css-input-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.css-input-container label {
+  margin-bottom: 10px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.css-input-container textarea {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  background-color: #2a2b2c;
+  color: #fff;
+  border: 1px solid #4c73ff;
+}
+
+.css-output-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.css-output-container label {
+  margin-bottom: 10px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.css-output-container textarea {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid #389bff;
+  border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  background-color: #2a2b2c;
+  color: #fff;
+  border: 1px solid #389bff;
+}
+
+.automatic-clamp-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.automatic-clamp-buttons button {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.process-css-btn {
+  background: linear-gradient(90deg, #4c73ff, #389bff);
+  color: white;
+}
+
+.process-css-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(76, 115, 255, 0.4);
+}
+
+.copy-output-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.copy-output-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.close-automatic-clamp-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.close-automatic-clamp-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+/* Automatic Clamp Button End */
+
+
+
 /* Footer */
 .footer-container {
   position: fixed;
   bottom: 10px;
   width: 100%;
   text-align: center;
+  z-index: 1;
 }
 .footer-container a {
   background-color: transparent;
@@ -438,6 +706,23 @@ body.light-mode {
   color: #1e1f20;
 }
 
+body.light-mode::before {
+  background-image: 
+    linear-gradient(rgba(76, 115, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.15) 1px, transparent 1px);
+}
+
+body.light-mode::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(76, 115, 255, 0.4) 25%,
+    rgba(56, 155, 255, 0.5) 50%,
+    rgba(76, 115, 255, 0.4) 75%,
+    transparent 100%
+  );
+}
+
 body.light-mode .container {
   background-color: #f0f0f0;
   color: #333;
@@ -507,6 +792,24 @@ body.light-mode .p-title span{
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+body.light-mode .automatic-clamp-popup {
+  background-color: #fff;
+  color: #1e1f20;
+}
+
+body.light-mode .automatic-clamp-content h2 span {
+  background: linear-gradient(90deg, #007bff, #4c73ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .css-input-container textarea,
+body.light-mode .css-output-container textarea {
+  background-color: #f8f9fa;
+  color: #1e1f20;
+  border: 1px solid #4c73ff;
+}
 /* Change Theme End */
 
 @media only screen and (max-width: 540px) {
@@ -515,5 +818,22 @@ body.light-mode .p-title span{
     box-sizing: border-box;
     width: 90%;
     padding: 15px;
+  }
+  
+  .automatic-clamp-popup {
+    top: 2%;
+    left: 2%;
+    width: 96%;
+    height: 96%;
+  }
+  
+  .viewport-inputs {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .automatic-clamp-buttons {
+    flex-direction: column;
+    gap: 10px;
   }
 }
