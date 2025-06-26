@@ -13,7 +13,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Animated Grid Background */
+/* Animated Grid Background with RGB Cable Effect */
 body::before {
   content: '';
   position: fixed;
@@ -22,8 +22,8 @@ body::before {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(76, 115, 255, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(76, 115, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.3) 1px, transparent 1px);
   background-size: 50px 50px;
   z-index: -2;
   animation: gridMove 20s linear infinite;
@@ -36,17 +36,13 @@ body::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(76, 115, 255, 0.3) 25%,
-    rgba(56, 155, 255, 0.4) 50%,
-    rgba(76, 115, 255, 0.3) 75%,
-    transparent 100%
-  );
-  background-size: 200px 100%;
+  background-image: 
+    linear-gradient(rgba(76, 115, 255, 0.8) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 155, 255, 0.8) 1px, transparent 1px);
+  background-size: 50px 50px;
   z-index: -1;
-  animation: lightSweep 8s ease-in-out infinite;
+  animation: gridMove 20s linear infinite, gridPulse 3s ease-in-out infinite;
+  opacity: 0.6;
 }
 
 @keyframes gridMove {
@@ -58,17 +54,68 @@ body::after {
   }
 }
 
-@keyframes lightSweep {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
+@keyframes gridPulse {
+  0%, 100% {
+    opacity: 0.3;
   }
   50% {
-    opacity: 1;
+    opacity: 0.8;
+  }
+}
+
+/* Logo Styles */
+.logo-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #4c73ff, #389bff);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(76, 115, 255, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: logoShine 3s ease-in-out infinite;
+}
+
+.logo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(76, 115, 255, 0.4);
+}
+
+@keyframes logoShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
   }
   100% {
-    transform: translateX(100vw);
-    opacity: 0;
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
   }
 }
 
@@ -402,15 +449,15 @@ button#convertBtn:hover {
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
 .automatic-clamp-content h2 {
-  margin-top: 0;
+  margin: 0;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 28px;
   text-align: center;
-  margin-bottom: 20px;
 }
 
 .automatic-clamp-content h2 span {
@@ -423,7 +470,6 @@ button#convertBtn:hover {
 .viewport-inputs {
   display: flex;
   gap: 20px;
-  margin-bottom: 20px;
 }
 
 .viewport-input-group {
@@ -448,41 +494,22 @@ button#convertBtn:hover {
   box-sizing: border-box;
 }
 
-.css-input-container {
-  flex: 1;
+.css-containers {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.css-input-container label {
-  margin-bottom: 10px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-}
-
-.css-input-container textarea {
+  gap: 20px;
   flex: 1;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-family: "Courier New", monospace;
-  font-size: 14px;
-  resize: none;
-  outline: none;
-  background-color: #2a2b2c;
-  color: #fff;
-  border: 1px solid #4c73ff;
+  min-height: 0;
 }
 
+.css-input-container,
 .css-output-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  min-height: 0;
 }
 
+.css-input-container label,
 .css-output-container label {
   margin-bottom: 10px;
   font-family: "Poppins", sans-serif;
@@ -490,24 +517,39 @@ button#convertBtn:hover {
   font-size: 16px;
 }
 
+.css-input-container textarea,
 .css-output-container textarea {
   flex: 1;
   padding: 15px;
-  border: 1px solid #389bff;
+  border: 1px solid #4c73ff;
   border-radius: 6px;
-  font-family: "Courier New", monospace;
+  font-family: "Fira Code", "Courier New", monospace;
   font-size: 14px;
+  line-height: 1.5;
   resize: none;
   outline: none;
   background-color: #2a2b2c;
   color: #fff;
-  border: 1px solid #389bff;
+  tab-size: 2;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+.css-input-container textarea {
+  border-color: #4c73ff;
+}
+
+.css-output-container textarea {
+  border-color: #389bff;
+  background-color: #252627;
 }
 
 .automatic-clamp-buttons {
   display: flex;
   gap: 10px;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .automatic-clamp-buttons button {
@@ -708,19 +750,14 @@ body.light-mode {
 
 body.light-mode::before {
   background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.15) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(76, 115, 255, 0.15) 1px, transparent 1px);
+    linear-gradient(rgba(76, 115, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.4) 1px, transparent 1px);
 }
 
 body.light-mode::after {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(76, 115, 255, 0.4) 25%,
-    rgba(56, 155, 255, 0.5) 50%,
-    rgba(76, 115, 255, 0.4) 75%,
-    transparent 100%
-  );
+  background-image: 
+    linear-gradient(rgba(76, 115, 255, 0.9) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 155, 255, 0.9) 1px, transparent 1px);
 }
 
 body.light-mode .container {
@@ -810,6 +847,10 @@ body.light-mode .css-output-container textarea {
   color: #1e1f20;
   border: 1px solid #4c73ff;
 }
+
+body.light-mode .css-output-container textarea {
+  background-color: #f0f0f0;
+}
 /* Change Theme End */
 
 @media only screen and (max-width: 540px) {
@@ -832,8 +873,18 @@ body.light-mode .css-output-container textarea {
     gap: 10px;
   }
   
+  .css-containers {
+    flex-direction: column;
+  }
+  
   .automatic-clamp-buttons {
     flex-direction: column;
     gap: 10px;
+  }
+  
+  .logo {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
   }
 }

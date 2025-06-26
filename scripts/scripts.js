@@ -131,25 +131,39 @@ function processCSS() {
     // Properties that should NOT be clamped
     const excludedProperties = ['letter-spacing', 'border', 'box-shadow'];
     
-    // Process CSS
+    // Process CSS - improved regex to handle all CSS blocks properly
     let processedCSS = cssInput;
     
-    // Find all CSS blocks
-    const cssBlocks = processedCSS.match(/[^{}]+\{[^{}]*\}/g) || [];
+    // Find all CSS blocks with improved regex
+    const cssBlockRegex = /([^{}]+)\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g;
+    let match;
+    const blocks = [];
     
-    cssBlocks.forEach(block => {
-        const [selector, rules] = block.split('{');
-        const rulesContent = rules.replace('}', '');
+    while ((match = cssBlockRegex.exec(cssInput)) !== null) {
+        blocks.push({
+            selector: match[1].trim(),
+            rules: match[2],
+            fullMatch: match[0]
+        });
+    }
+    
+    blocks.forEach(block => {
+        const { selector, rules, fullMatch } = block;
         
         // Parse individual CSS properties
-        const properties = rulesContent.split(';').filter(prop => prop.trim());
+        const properties = rules.split(';').filter(prop => prop.trim());
         let updatedRules = '';
         let fontSize = null;
         let lineHeight = null;
         
         // First pass: collect font-size and line-height
         properties.forEach(property => {
-            const [prop, value] = property.split(':').map(s => s.trim());
+            const colonIndex = property.indexOf(':');
+            if (colonIndex === -1) return;
+            
+            const prop = property.substring(0, colonIndex).trim();
+            const value = property.substring(colonIndex + 1).trim();
+            
             if (prop === 'font-size' && value && value.includes('px')) {
                 const pxValue = parseFloat(value.replace('px', ''));
                 if (!isNaN(pxValue)) {
@@ -166,11 +180,20 @@ function processCSS() {
         
         // Second pass: process properties
         properties.forEach(property => {
-            const [prop, value] = property.split(':').map(s => s.trim());
+            const colonIndex = property.indexOf(':');
+            if (colonIndex === -1) {
+                if (property.trim()) {
+                    updatedRules += `    ${property.trim()};\n`;
+                }
+                return;
+            }
+            
+            const prop = property.substring(0, colonIndex).trim();
+            const value = property.substring(colonIndex + 1).trim();
             
             if (!prop || !value) {
                 if (property.trim()) {
-                    updatedRules += `    ${property};\n`;
+                    updatedRules += `    ${property.trim()};\n`;
                 }
                 return;
             }
@@ -185,8 +208,10 @@ function processCSS() {
             if (prop === 'line-height' && value.includes('px') && fontSize) {
                 const pxValue = parseFloat(value.replace('px', ''));
                 if (!isNaN(pxValue)) {
-                    const ratio = (pxValue / fontSize).toFixed(10);
-                    updatedRules += `    ${prop}: ${ratio};\n`;
+                    const ratio = pxValue / fontSize;
+                    // Check if ratio is a whole number
+                    const formattedRatio = ratio % 1 === 0 ? ratio.toString() : ratio.toFixed(10).replace(/\.?0+$/, '');
+                    updatedRules += `    ${prop}: ${formattedRatio};\n`;
                     return;
                 }
             }
@@ -219,8 +244,8 @@ function processCSS() {
         });
         
         // Replace the original block with the processed one
-        const newBlock = `${selector.trim()} {\n${updatedRules}}`;
-        processedCSS = processedCSS.replace(block, newBlock);
+        const newBlock = `${selector} {\n${updatedRules}}`;
+        processedCSS = processedCSS.replace(fullMatch, newBlock);
     });
     
     document.getElementById('cssOutput').value = processedCSS;
