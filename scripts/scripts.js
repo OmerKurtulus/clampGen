@@ -118,6 +118,35 @@ function handleAutomaticClampClose() {
     hideElement(blurBackground);
 }
 
+// Parse CSS values with multiple values (like margin: 0 0 13px)
+function parseMultipleValues(value, maxViewport, minViewport, prop) {
+    const values = value.trim().split(/\s+/);
+    const processedValues = values.map(val => {
+        if (val === '0' || val === '0px') {
+            return '0';
+        }
+        
+        if (val.includes('px')) {
+            const pxValue = parseFloat(val.replace('px', ''));
+            if (!isNaN(pxValue) && pxValue !== 0) {
+                const clampResult = calculateClamp(pxValue, maxViewport, minViewport);
+                
+                // Apply 13px minimum only for font-size
+                if (prop === 'font-size') {
+                    const minValue = Math.max(clampResult.min, 13);
+                    return `clamp(${minValue.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
+                }
+                
+                return `clamp(${clampResult.min.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
+            }
+        }
+        
+        return val;
+    });
+    
+    return processedValues.join(' ');
+}
+
 function processCSS() {
     const cssInput = document.getElementById('cssInput').value;
     const maxViewport = getInputValue('autoClampMax');
@@ -129,13 +158,13 @@ function processCSS() {
     }
 
     // Properties that should NOT be clamped
-    const excludedProperties = ['letter-spacing', 'border', 'box-shadow'];
+    const excludedProperties = ['letter-spacing', 'border', 'box-shadow', 'max-width', 'max-height', 'min-width', 'min-height'];
     
     // Process CSS - improved regex to handle all CSS blocks properly
     let processedCSS = cssInput;
     
-    // Find all CSS blocks with improved regex
-    const cssBlockRegex = /([^{}]+)\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g;
+    // Find all CSS blocks with improved regex that handles nested structures
+    const cssBlockRegex = /([^{}]+)\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g;
     let match;
     const blocks = [];
     
@@ -143,11 +172,13 @@ function processCSS() {
         blocks.push({
             selector: match[1].trim(),
             rules: match[2],
-            fullMatch: match[0]
+            fullMatch: match[0],
+            startIndex: match.index
         });
     }
     
-    blocks.forEach(block => {
+    // Process blocks in reverse order to avoid index shifting issues
+    blocks.reverse().forEach(block => {
         const { selector, rules, fullMatch } = block;
         
         // Parse individual CSS properties
@@ -216,6 +247,13 @@ function processCSS() {
                 }
             }
             
+            // Handle properties with multiple values (like margin, padding)
+            if (value.includes('px') && /\s/.test(value.trim())) {
+                const processedValue = parseMultipleValues(value, maxViewport, minViewport, prop);
+                updatedRules += `    ${prop}: ${processedValue};\n`;
+                return;
+            }
+            
             // Handle font-size with minimum 13px constraint
             if (prop === 'font-size' && value.includes('px')) {
                 const pxValue = parseFloat(value.replace('px', ''));
@@ -228,10 +266,10 @@ function processCSS() {
                 }
             }
             
-            // Handle other px values
+            // Handle other single px values
             if (value.includes('px') && prop !== 'line-height') {
                 const pxValue = parseFloat(value.replace('px', ''));
-                if (!isNaN(pxValue)) {
+                if (!isNaN(pxValue) && pxValue !== 0) {
                     const clampResult = calculateClamp(pxValue, maxViewport, minViewport);
                     const clampValue = `clamp(${clampResult.min.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
                     updatedRules += `    ${prop}: ${clampValue};\n`;
@@ -270,6 +308,46 @@ function handleCopyOutput() {
     }, 3000);
 }
 
+function handleDownloadCSS() {
+    const outputText = document.getElementById('cssOutput').value;
+    if (!outputText.trim()) {
+        alert('No processed CSS to download. Please process CSS first.');
+        return;
+    }
+    
+    // Create a blob with the CSS content
+    const blob = new Blob([outputText], { type: 'text/css' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary download link
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'style.css';
+    downloadLink.style.display = 'none';
+    
+    // Add to DOM, click, and remove
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    
+    // Clean up the URL object
+    URL.revokeObjectURL(url);
+    
+    // Show confirmation message
+    const copyMessage = document.getElementById('copyMessage');
+    copyMessage.textContent = 'Downloaded';
+    showElement(copyMessage);
+
+    setTimeout(() => setOpacity(copyMessage, '1'), 10);
+    setTimeout(() => {
+        setOpacity(copyMessage, '0');
+        setTimeout(() => {
+            hideElement(copyMessage);
+            copyMessage.textContent = 'Copied'; // Reset text
+        }, 500);
+    }, 3000);
+}
+
 // Theme initialization
 const themeToggleBtn = document.getElementById('themeToggleBtn');
 const savedTheme = localStorage.getItem('theme') || 'light';
@@ -301,11 +379,13 @@ const automaticClampBtn = document.getElementById('automaticClampBtn');
 const closeAutomaticClampBtn = document.getElementById('closeAutomaticClampBtn');
 const processCssBtn = document.getElementById('processCssBtn');
 const copyOutputBtn = document.getElementById('copyOutputBtn');
+const downloadCssBtn = document.getElementById('downloadCssBtn');
 
 automaticClampBtn.addEventListener('click', handleAutomaticClampOpen);
 closeAutomaticClampBtn.addEventListener('click', handleAutomaticClampClose);
 processCssBtn.addEventListener('click', processCSS);
 copyOutputBtn.addEventListener('click', handleCopyOutput);
+downloadCssBtn.addEventListener('click', handleDownloadCSS);
 
 window.addEventListener('click', (event) => {
     if (event.target === blurBackground) {

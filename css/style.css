@@ -13,7 +13,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Animated Grid Background with RGB Cable Effect */
+/* Animated Hexagonal Grid Background with RGB Cable Effect */
 body::before {
   content: '';
   position: fixed;
@@ -22,11 +22,10 @@ body::before {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(76, 115, 255, 0.3) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(rgba(76, 115, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.15) 1px, transparent 1px);
+  background-size: 60px 60px;
   z-index: -2;
-  animation: gridMove 20s linear infinite;
 }
 
 body::after {
@@ -37,38 +36,41 @@ body::after {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.8) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 155, 255, 0.8) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(90deg, transparent 0%, rgba(76, 115, 255, 0.8) 50%, transparent 100%),
+    linear-gradient(0deg, transparent 0%, rgba(56, 155, 255, 0.8) 50%, transparent 100%);
+  background-size: 120px 60px, 60px 120px;
   z-index: -1;
-  animation: gridMove 20s linear infinite, gridPulse 3s ease-in-out infinite;
-  opacity: 0.6;
+  animation: lightFlow 4s ease-in-out infinite;
+  opacity: 0.4;
 }
 
-@keyframes gridMove {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(50px, 50px);
-  }
-}
-
-@keyframes gridPulse {
+@keyframes lightFlow {
   0%, 100% {
-    opacity: 0.3;
+    background-position: -120px 0, 0 -120px;
   }
   50% {
-    opacity: 0.8;
+    background-position: 120px 0, 0 120px;
   }
+}
+
+/* Header Container */
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
 }
 
 /* Logo Styles */
 .logo-container {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .logo {
@@ -123,7 +125,7 @@ body::after {
   background: #1e1f20;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
   width: 350px;
   text-align: center;
   color: #ececec;
@@ -204,7 +206,7 @@ button#convertBtn:hover {
   background: #1e1f20;
   padding: 10px 20px;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
   width: 350px;
   text-align: center;
   display: flex;
@@ -400,11 +402,10 @@ button#convertBtn:hover {
 
 /* Automatic Clamp Button */
 .automatic-clamp-container {
-  position: fixed;
-  top: 60px;
-  width: 100%;
-  text-align: center;
-  z-index: 1000;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .automatic-clamp-btn {
@@ -431,10 +432,10 @@ button#convertBtn:hover {
 /* Automatic Clamp Popup */
 .automatic-clamp-popup {
   position: fixed;
-  top: 5%;
-  left: 5%;
-  width: 90%;
-  height: 90%;
+  top: 3%;
+  left: 3%;
+  width: 94%;
+  height: 94%;
   background-color: #1e1f20;
   color: white;
   border-radius: 12px;
@@ -458,6 +459,7 @@ button#convertBtn:hover {
   font-weight: 400;
   font-size: 28px;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .automatic-clamp-content h2 span {
@@ -470,6 +472,7 @@ button#convertBtn:hover {
 .viewport-inputs {
   display: flex;
   gap: 20px;
+  flex-shrink: 0;
 }
 
 .viewport-input-group {
@@ -499,6 +502,7 @@ button#convertBtn:hover {
   gap: 20px;
   flex: 1;
   min-height: 0;
+  max-height: calc(100vh - 300px);
 }
 
 .css-input-container,
@@ -515,6 +519,7 @@ button#convertBtn:hover {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 16px;
+  flex-shrink: 0;
 }
 
 .css-input-container textarea,
@@ -522,27 +527,29 @@ button#convertBtn:hover {
   flex: 1;
   padding: 15px;
   border: 1px solid #4c73ff;
-  border-radius: 6px;
+  border-radius: 8px;
   font-family: "Fira Code", "Courier New", monospace;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
   resize: none;
   outline: none;
-  background-color: #2a2b2c;
-  color: #fff;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
   tab-size: 2;
   white-space: pre;
   overflow-wrap: normal;
   overflow-x: auto;
+  min-height: 200px;
 }
 
 .css-input-container textarea {
   border-color: #4c73ff;
+  background-color: #1e1e1e;
 }
 
 .css-output-container textarea {
   border-color: #389bff;
-  background-color: #252627;
+  background-color: #252526;
 }
 
 .automatic-clamp-buttons {
@@ -550,6 +557,7 @@ button#convertBtn:hover {
   gap: 10px;
   justify-content: center;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .automatic-clamp-buttons button {
@@ -580,6 +588,16 @@ button#convertBtn:hover {
 
 .copy-output-btn:hover {
   background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.download-css-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.download-css-btn:hover {
+  background-color: #138496;
   transform: translateY(-2px);
 }
 
@@ -632,16 +650,13 @@ button#convertBtn:hover {
 
 /* Change Theme */
 .theme-toggle-container {
-  position: fixed;
-  top: 10px;
-  width: 100%;
-  text-align: center;
-  z-index: 1000;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .theme-toggle-btn {
- /* background-color: #1e1f20;
-  color: white;*/
   padding: 0;
   width: 90px;
   height: 36px;
@@ -652,6 +667,7 @@ button#convertBtn:hover {
   font-weight: 700;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 /*Custom Dark Light Button*/
 .theme-toggle-btn-wrapper{
   display: flex;
@@ -659,11 +675,8 @@ button#convertBtn:hover {
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
 }
+
 label.dark-light-mode-label {
   width: 90px;
   height: 36px;
@@ -750,19 +763,20 @@ body.light-mode {
 
 body.light-mode::before {
   background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(76, 115, 255, 0.4) 1px, transparent 1px);
+    linear-gradient(rgba(76, 115, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.2) 1px, transparent 1px);
 }
 
 body.light-mode::after {
   background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.9) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 155, 255, 0.9) 1px, transparent 1px);
+    linear-gradient(90deg, transparent 0%, rgba(76, 115, 255, 0.9) 50%, transparent 100%),
+    linear-gradient(0deg, transparent 0%, rgba(56, 155, 255, 0.9) 50%, transparent 100%);
 }
 
 body.light-mode .container {
   background-color: #f0f0f0;
   color: #333;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .info-button {
@@ -772,18 +786,12 @@ body.light-mode .info-button i {
   color: #1e1f20;
 }
 
-/*
-body.light-mode .theme-toggle-btn {
-  background-color: #333;
-  color: #fff;
-}
-*/
-
 body.light-mode h1 {
   color: #1e1f20;
 }
 body.light-mode .output-container {
   background-color: #f0f0f0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 body.light-mode .output {
   color: #333333;
@@ -853,7 +861,19 @@ body.light-mode .css-output-container textarea {
 }
 /* Change Theme End */
 
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .theme-toggle-container,
+  .automatic-clamp-container {
+    position: static;
+    transform: none;
+  }
+  
   .container,
   .output-container {
     box-sizing: border-box;
@@ -875,6 +895,7 @@ body.light-mode .css-output-container textarea {
   
   .css-containers {
     flex-direction: column;
+    max-height: calc(100vh - 400px);
   }
   
   .automatic-clamp-buttons {
