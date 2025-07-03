@@ -11,9 +11,23 @@ body {
   margin: 0;
   position: relative;
   overflow-x: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-/* Animated Hexagonal Grid Background with RGB Cable Effect */
+/* Disable right-click context menu */
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Subtle Animated Background */
 body::before {
   content: '';
   position: fixed;
@@ -21,11 +35,13 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.15) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(76, 115, 255, 0.15) 1px, transparent 1px);
-  background-size: 60px 60px;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(76, 115, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(56, 155, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(76, 115, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 60% 80%, rgba(56, 155, 255, 0.05) 0%, transparent 50%);
   z-index: -2;
+  animation: subtleFloat 8s ease-in-out infinite;
 }
 
 body::after {
@@ -35,21 +51,30 @@ body::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    linear-gradient(90deg, transparent 0%, rgba(76, 115, 255, 0.8) 50%, transparent 100%),
-    linear-gradient(0deg, transparent 0%, rgba(56, 155, 255, 0.8) 50%, transparent 100%);
-  background-size: 120px 60px, 60px 120px;
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(76, 115, 255, 0.03) 50%, transparent 70%),
+    linear-gradient(-45deg, transparent 30%, rgba(56, 155, 255, 0.03) 50%, transparent 70%);
+  background-size: 200px 200px;
   z-index: -1;
-  animation: lightFlow 4s ease-in-out infinite;
-  opacity: 0.4;
+  animation: gentleShift 12s ease-in-out infinite;
+  opacity: 0.6;
 }
 
-@keyframes lightFlow {
+@keyframes subtleFloat {
   0%, 100% {
-    background-position: -120px 0, 0 -120px;
+    transform: translateY(0px) scale(1);
   }
   50% {
-    background-position: 120px 0, 0 120px;
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
+@keyframes gentleShift {
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%;
+  }
+  50% {
+    background-position: 100% 100%, 0% 0%;
   }
 }
 
@@ -343,10 +368,13 @@ button#convertBtn:hover {
   transform: translate(-50%, -50%);
   background-color: #1e1f20;
   color: white;
-  padding: 20px;
+  padding: 30px;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  width: 300px;
+  width: 450px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
   display: none;
   z-index: 999;
 }
@@ -356,6 +384,7 @@ button#convertBtn:hover {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 26px;
+  margin-bottom: 20px;
 }
 .p-title{
   font-weight: 300;
@@ -373,7 +402,29 @@ button#convertBtn:hover {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.popup-content h3 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 20px 0 10px 0;
+  color: #4c73ff;
+}
+
+.popup-content ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.popup-content li {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 .popup-content p.pop-up-warning-p{
@@ -390,7 +441,7 @@ button#convertBtn:hover {
   border-radius: 4px;
   cursor: pointer;
   font-family: "Poppins", sans-serif;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .popup-content button:hover {
@@ -762,15 +813,17 @@ body.light-mode {
 }
 
 body.light-mode::before {
-  background-image: 
-    linear-gradient(rgba(76, 115, 255, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(76, 115, 255, 0.2) 1px, transparent 1px);
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(76, 115, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(56, 155, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(76, 115, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 60% 80%, rgba(56, 155, 255, 0.08) 0%, transparent 50%);
 }
 
 body.light-mode::after {
-  background-image: 
-    linear-gradient(90deg, transparent 0%, rgba(76, 115, 255, 0.9) 50%, transparent 100%),
-    linear-gradient(0deg, transparent 0%, rgba(56, 155, 255, 0.9) 50%, transparent 100%);
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(76, 115, 255, 0.05) 50%, transparent 70%),
+    linear-gradient(-45deg, transparent 30%, rgba(56, 155, 255, 0.05) 50%, transparent 70%);
 }
 
 body.light-mode .container {
@@ -907,5 +960,10 @@ body.light-mode .css-output-container textarea {
     width: 50px;
     height: 50px;
     font-size: 20px;
+  }
+  
+  .info-popup {
+    width: 90vw;
+    padding: 20px;
   }
 }

@@ -86,11 +86,31 @@
     <div id="infoPopup" class="info-popup">
         <div class="popup-content">
             <h2>About <span class="p-title">clamp<span>Gen</span></span></h2>
+            
+            <h3>Basic Clamp Generator</h3>
             <p>This project helps to calculate responsive dimensions using CSS clamp function.</p>
             <p>By entering max, min and target values, users get a dynamic and responsive CSS clamp output.</p>
-            <p>Enter the value where the responsive will start in the maximum value range For example: 1100px, enter the breakpoint value in the minimum value range For example: 768px (This value can be the starting value of tablet screens.)
-                And finally enter the target value you want to clamp, when you press the Generate button you will get a responsive value in the max and min value range.</p>
-            <p class="pop-up-warning-p">!This project works in "px"!</p>
+            <p>Enter the value where the responsive will start in the maximum value range For example: 1100px, enter the breakpoint value in the minimum value range For example: 768px (This value can be the starting value of tablet screens.) And finally enter the target value you want to clamp, when you press the Generate button you will get a responsive value in the max and min value range.</p>
+            
+            <h3>Automatic Clamp Feature</h3>
+            <p>The Automatic Clamp feature allows you to process entire CSS files automatically. Here's how it works:</p>
+            <ul>
+                <li><strong>Paste your CSS:</strong> Copy and paste your existing CSS code into the input area</li>
+                <li><strong>Set viewport ranges:</strong> Define your maximum (e.g., 1100px) and minimum (e.g., 768px) viewport widths</li>
+                <li><strong>Automatic processing:</strong> The tool will automatically convert all pixel values to responsive clamp() functions</li>
+                <li><strong>Smart handling:</strong> 
+                    <ul>
+                        <li>Zero values (0px) remain as 0</li>
+                        <li>Multiple values (like margin: 0 0 13px) are processed individually</li>
+                        <li>Font-size has a minimum of 13px for readability</li>
+                        <li>Line-height is converted to unitless ratios when possible</li>
+                        <li>Properties like max-width, min-width, letter-spacing, and borders are preserved</li>
+                    </ul>
+                </li>
+                <li><strong>Download result:</strong> You can copy the processed CSS or download it as a style.css file</li>
+            </ul>
+            
+            <p class="pop-up-warning-p">!This project works in "px" units only!</p>
             <button id="closePopupBtn">Close</button>
         </div>
     </div>
@@ -141,6 +161,28 @@
     </footer>
     
     <!-- Scripts -->
+    <script>
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
+                (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable text selection on specific elements
+        document.addEventListener('selectstart', function(e) {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+    </script>
     <script src="/scripts/scripts.js"></script>
 </body>
 </html>
