@@ -12,6 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preload" href="/css/style.css" as="style">
+    <style>
+        /* Inline critical CSS to prevent inspection */
+        body{font-family:Arial,sans-serif;display:flex;flex-direction:column;justify-content:center;align-items:center;row-gap:20px;height:100vh;background-color:#131314;margin:0;position:relative;overflow-x:hidden}body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 50%,rgba(76,115,255,0.1) 0%,transparent 50%),radial-gradient(circle at 80% 50%,rgba(56,155,255,0.1) 0%,transparent 50%),radial-gradient(circle at 40% 20%,rgba(76,115,255,0.05) 0%,transparent 50%),radial-gradient(circle at 60% 80%,rgba(56,155,255,0.05) 0%,transparent 50%);z-index:-2;animation:subtleFloat 8s ease-in-out infinite}body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(45deg,transparent 30%,rgba(76,115,255,0.03) 50%,transparent 70%),linear-gradient(-45deg,transparent 30%,rgba(56,155,255,0.03) 50%,transparent 70%);background-size:200px 200px;z-index:-1;animation:gentleShift 12s ease-in-out infinite;opacity:0.6}@keyframes subtleFloat{0%,100%{transform:translateY(0px) scale(1)}50%{transform:translateY(-10px) scale(1.02)}}@keyframes gentleShift{0%,100%{background-position:0% 0%,100% 100%}50%{background-position:100% 100%,0% 0%}}
+    </style>
     <link rel="stylesheet" href="/css/style.css">
     <script type="application/ld+json">
         {
@@ -162,21 +166,28 @@
     
     <!-- Scripts -->
     <script>
-        // Disable right-click context menu
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        // CSS Protection - Disable developer tools access to CSS
         document.addEventListener('keydown', function(e) {
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
             if (e.key === 'F12' || 
                 (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
                 (e.ctrlKey && e.key === 'U')) {
                 e.preventDefault();
+                return false;
             }
         });
 
-        // Disable text selection on specific elements
+        // Obfuscate CSS content in DevTools
+        (function() {
+            const originalStyleSheets = document.styleSheets;
+            Object.defineProperty(document, 'styleSheets', {
+                get: function() {
+                    return [];
+                }
+            });
+        })();
+
+        // Allow text selection only in input and textarea elements
         document.addEventListener('selectstart', function(e) {
             if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                 e.preventDefault();

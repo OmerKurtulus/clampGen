@@ -11,20 +11,21 @@ body {
   margin: 0;
   position: relative;
   overflow-x: hidden;
+}
+
+/* Allow text selection only in inputs and textareas */
+body {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-/* Disable right-click context menu */
-body {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 /* Subtle Animated Background */
@@ -535,6 +536,7 @@ button#convertBtn:hover {
   margin-bottom: 5px;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
+  flex-shrink: 0;
 }
 
 .viewport-input-group input {
