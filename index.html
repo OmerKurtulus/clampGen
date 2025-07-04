@@ -14,7 +14,7 @@
     <link rel="preload" href="/css/style.css" as="style">
     <style>
         /* Inline critical CSS to prevent inspection */
-        body{font-family:Arial,sans-serif;display:flex;flex-direction:column;justify-content:center;align-items:center;row-gap:20px;height:100vh;background-color:#131314;margin:0;position:relative;overflow-x:hidden}body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 50%,rgba(76,115,255,0.1) 0%,transparent 50%),radial-gradient(circle at 80% 50%,rgba(56,155,255,0.1) 0%,transparent 50%),radial-gradient(circle at 40% 20%,rgba(76,115,255,0.05) 0%,transparent 50%),radial-gradient(circle at 60% 80%,rgba(56,155,255,0.05) 0%,transparent 50%);z-index:-2;animation:subtleFloat 8s ease-in-out infinite}body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(45deg,transparent 30%,rgba(76,115,255,0.03) 50%,transparent 70%),linear-gradient(-45deg,transparent 30%,rgba(56,155,255,0.03) 50%,transparent 70%);background-size:200px 200px;z-index:-1;animation:gentleShift 12s ease-in-out infinite;opacity:0.6}@keyframes subtleFloat{0%,100%{transform:translateY(0px) scale(1)}50%{transform:translateY(-10px) scale(1.02)}}@keyframes gentleShift{0%,100%{background-position:0% 0%,100% 100%}50%{background-position:100% 100%,0% 0%}}
+        body{font-family:Arial,sans-serif;display:flex;flex-direction:column;justify-content:center;align-items:center;row-gap:20px;height:100vh;background-color:#131314;margin:0;position:relative;overflow-x:hidden}body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(76,115,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(76,115,255,0.1) 1px,transparent 1px);background-size:50px 50px;z-index:-1;opacity:0.7}
     </style>
     <link rel="stylesheet" href="/css/style.css">
     <script type="application/ld+json">
@@ -35,6 +35,11 @@
 <body>
     <!-- Header Container -->
     <div class="header-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <a href="#" class="logo">cG</a>
+        </div>
+
         <!-- Theme Toggle -->
         <div class="theme-toggle-container">
             <div class="theme-toggle-btn-wrapper">
@@ -44,16 +49,6 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="ionicon dark-mode-icon" viewBox="0 0 512 512"><path d="M264 480A232 232 0 0132 248c0-94 54-178.28 137.61-214.67a16 16 0 0121.06 21.06C181.07 76.43 176 104.66 176 136c0 110.28 89.72 200 200 200 31.34 0 59.57-5.07 81.61-14.67a16 16 0 0121.06 21.06C442.28 426 358 480 264 480z"/></svg>
                 </label>
             </div>
-        </div>
-
-        <!-- Logo -->
-        <div class="logo-container">
-            <a href="#" class="logo">cG</a>
-        </div>
-
-        <!-- Automatic Clamp Button -->
-        <div class="automatic-clamp-container">
-            <button id="automaticClampBtn" class="automatic-clamp-btn">Automatic Clamp</button>
         </div>
     </div>
 
@@ -85,6 +80,11 @@
         <button id="copyBtn" class="copy-btn"><i class="fas fa-copy"></i></button>
     </div>
 
+    <!-- Automatic Clamp Button -->
+    <div class="automatic-clamp-container">
+        <button id="automaticClampBtn" class="automatic-clamp-btn">Automatic Clamp</button>
+    </div>
+
     <!-- Info Button Pop-up -->
     <div id="blurBackground" class="blur-background"></div>
     <div id="infoPopup" class="info-popup">
@@ -104,11 +104,12 @@
                 <li><strong>Automatic processing:</strong> The tool will automatically convert all pixel values to responsive clamp() functions</li>
                 <li><strong>Smart handling:</strong> 
                     <ul>
-                        <li>Zero values (0px) remain as 0</li>
+                        <li>Zero values (0px) and 1px values remain unchanged</li>
                         <li>Multiple values (like margin: 0 0 13px) are processed individually</li>
                         <li>Font-size has a minimum of 13px for readability</li>
                         <li>Line-height is converted to unitless ratios when possible</li>
                         <li>Properties like max-width, min-width, letter-spacing, and borders are preserved</li>
+                        <li>Negative values are handled with calc(-1 * clamp()) for proper functionality</li>
                     </ul>
                 </li>
                 <li><strong>Download result:</strong> You can copy the processed CSS or download it as a style.css file</li>

@@ -28,7 +28,7 @@ input, textarea {
   user-select: text;
 }
 
-/* Subtle Animated Background */
+/* Simple Grid Background */
 body::before {
   content: '';
   position: fixed;
@@ -36,47 +36,12 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(76, 115, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(56, 155, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(76, 115, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 60% 80%, rgba(56, 155, 255, 0.05) 0%, transparent 50%);
-  z-index: -2;
-  animation: subtleFloat 8s ease-in-out infinite;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    linear-gradient(45deg, transparent 30%, rgba(76, 115, 255, 0.03) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(56, 155, 255, 0.03) 50%, transparent 70%);
-  background-size: 200px 200px;
+  background-image: 
+    linear-gradient(rgba(76, 115, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
   z-index: -1;
-  animation: gentleShift 12s ease-in-out infinite;
-  opacity: 0.6;
-}
-
-@keyframes subtleFloat {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-10px) scale(1.02);
-  }
-}
-
-@keyframes gentleShift {
-  0%, 100% {
-    background-position: 0% 0%, 100% 100%;
-  }
-  50% {
-    background-position: 100% 100%, 0% 0%;
-  }
+  opacity: 0.7;
 }
 
 /* Header Container */
@@ -86,15 +51,15 @@ body::after {
   left: 0;
   right: 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   padding: 20px;
   z-index: 1000;
+  gap: 15px;
 }
 
 /* Logo Styles */
 .logo-container {
-  flex: 1;
   display: flex;
   justify-content: center;
 }
@@ -372,7 +337,7 @@ button#convertBtn:hover {
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  width: 450px;
+  width: 500px;
   max-width: 90vw;
   max-height: 80vh;
   overflow-y: auto;
@@ -454,10 +419,9 @@ button#convertBtn:hover {
 
 /* Automatic Clamp Button */
 .automatic-clamp-container {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .automatic-clamp-btn {
@@ -555,7 +519,7 @@ button#convertBtn:hover {
   gap: 20px;
   flex: 1;
   min-height: 0;
-  max-height: calc(100vh - 300px);
+  max-height: calc(100vh - 350px);
 }
 
 .css-input-container,
@@ -703,10 +667,9 @@ button#convertBtn:hover {
 
 /* Change Theme */
 .theme-toggle-container {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .theme-toggle-btn {
@@ -815,17 +778,9 @@ body.light-mode {
 }
 
 body.light-mode::before {
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(76, 115, 255, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(56, 155, 255, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(76, 115, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 60% 80%, rgba(56, 155, 255, 0.08) 0%, transparent 50%);
-}
-
-body.light-mode::after {
-  background: 
-    linear-gradient(45deg, transparent 30%, rgba(76, 115, 255, 0.05) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(56, 155, 255, 0.05) 50%, transparent 70%);
+  background-image: 
+    linear-gradient(rgba(76, 115, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 115, 255, 0.15) 1px, transparent 1px);
 }
 
 body.light-mode .container {
@@ -918,15 +873,8 @@ body.light-mode .css-output-container textarea {
 
 @media only screen and (max-width: 768px) {
   .header-container {
-    flex-direction: column;
     gap: 15px;
     padding: 15px;
-  }
-  
-  .theme-toggle-container,
-  .automatic-clamp-container {
-    position: static;
-    transform: none;
   }
   
   .container,

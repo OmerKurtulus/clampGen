@@ -122,22 +122,26 @@ function handleAutomaticClampClose() {
 function parseMultipleValues(value, maxViewport, minViewport, prop) {
     const values = value.trim().split(/\s+/);
     const processedValues = values.map(val => {
-        if (val === '0' || val === '0px') {
-            return '0';
+        if (val === '0' || val === '0px' || val === '1' || val === '1px') {
+            return val === '0px' ? '0' : val;
         }
         
         if (val.includes('px')) {
             const pxValue = parseFloat(val.replace('px', ''));
-            if (!isNaN(pxValue) && pxValue !== 0) {
-                const clampResult = calculateClamp(pxValue, maxViewport, minViewport);
+            if (!isNaN(pxValue) && pxValue !== 0 && pxValue !== 1) {
+                const isNegative = pxValue < 0;
+                const absoluteValue = Math.abs(pxValue);
+                const clampResult = calculateClamp(absoluteValue, maxViewport, minViewport);
                 
                 // Apply 13px minimum only for font-size
                 if (prop === 'font-size') {
                     const minValue = Math.max(clampResult.min, 13);
-                    return `clamp(${minValue.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
+                    const clampValue = `clamp(${minValue.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
+                    return isNegative ? `calc(-1 * ${clampValue})` : clampValue;
                 }
                 
-                return `clamp(${clampResult.min.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
+                const clampValue = `clamp(${clampResult.min.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
+                return isNegative ? `calc(-1 * ${clampValue})` : clampValue;
             }
         }
         
@@ -257,7 +261,7 @@ function processCSS() {
             // Handle font-size with minimum 13px constraint
             if (prop === 'font-size' && value.includes('px')) {
                 const pxValue = parseFloat(value.replace('px', ''));
-                if (!isNaN(pxValue)) {
+                if (!isNaN(pxValue) && pxValue !== 0 && pxValue !== 1) {
                     const clampResult = calculateClamp(pxValue, maxViewport, minViewport);
                     const minValue = Math.max(clampResult.min, 13); // Minimum 13px for font-size
                     const clampValue = `clamp(${minValue.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
@@ -269,10 +273,17 @@ function processCSS() {
             // Handle other single px values
             if (value.includes('px') && prop !== 'line-height') {
                 const pxValue = parseFloat(value.replace('px', ''));
-                if (!isNaN(pxValue) && pxValue !== 0) {
-                    const clampResult = calculateClamp(pxValue, maxViewport, minViewport);
+                if (!isNaN(pxValue) && pxValue !== 0 && pxValue !== 1) {
+                    const isNegative = pxValue < 0;
+                    const absoluteValue = Math.abs(pxValue);
+                    const clampResult = calculateClamp(absoluteValue, maxViewport, minViewport);
                     const clampValue = `clamp(${clampResult.min.toFixed(2)}px, ${clampResult.vw.toFixed(4)}vw, ${clampResult.max}px)`;
-                    updatedRules += `    ${prop}: ${clampValue};\n`;
+                    
+                    if (isNegative) {
+                        updatedRules += `    ${prop}: calc(-1 * ${clampValue});\n`;
+                    } else {
+                        updatedRules += `    ${prop}: ${clampValue};\n`;
+                    }
                     return;
                 }
             }
